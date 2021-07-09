@@ -28,8 +28,48 @@ public class Controller {
     //Product Manager
     @GetMapping
     public ModelAndView showProducts() {
-        ModelAndView modelAndView = new ModelAndView("/product/list");
+        ModelAndView modelAndView = new ModelAndView("/product/manager");
         modelAndView.addObject("products", productService.findAll());
+        return modelAndView;
+    }
+
+    //Type Manager
+    @GetMapping("/type")
+    public ModelAndView showTypes() {
+        ModelAndView modelAndView = new ModelAndView("/type/manager");
+        modelAndView.addObject("types", typeService.findAll());
+        return modelAndView;
+    }
+
+    //Size manager
+    @GetMapping("/size")
+    public ModelAndView showSizes() {
+        ModelAndView modelAndView = new ModelAndView("/size/manager");
+        modelAndView.addObject("sizes", sizeService.findAll());
+        return modelAndView;
+    }
+
+    //User Manager
+    @GetMapping("/user")
+    public ModelAndView showUsers() {
+        ModelAndView modelAndView = new ModelAndView("/user/manager");
+        modelAndView.addObject("users", userService.findAll());
+        return modelAndView;
+    }
+
+    //Cart Manager
+    @GetMapping("/cart")
+    public ModelAndView showCarts() {
+        ModelAndView modelAndView = new ModelAndView("/cart/manager");
+        modelAndView.addObject("carts", cartService.findAll());
+        return modelAndView;
+    }
+
+    //Admin Manager
+    @GetMapping("/admin")
+    public ModelAndView showAdmin() {
+        ModelAndView modelAndView = new ModelAndView("/admin/set");
+        modelAndView.addObject("admin", userService.findById(1L));
         return modelAndView;
     }
 }
