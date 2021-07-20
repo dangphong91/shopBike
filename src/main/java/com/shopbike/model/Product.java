@@ -27,14 +27,16 @@ public class Product {
     private Size size;
 
     private String nameProduct;
-    private Double priceProduct;
+    private double priceProduct;
     private String description;
+    private String image;
 
-    public Product(Type type, Size size, String nameProduct, Double priceProduct, String description) {
+    public Product(String nameProduct, Type type, Size size, double priceProduct, String description, String image) {
+        this.nameProduct = nameProduct;
         this.type = type;
         this.size = size;
-        this.nameProduct = nameProduct;
         this.priceProduct = priceProduct;
         this.description = description;
+        this.image = image;
     }
 }

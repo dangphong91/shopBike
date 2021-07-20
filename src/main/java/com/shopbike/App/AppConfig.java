@@ -1,12 +1,16 @@
 package com.shopbike.App;
 
+import com.shopbike.formatter.TypeFormatter;
+import com.shopbike.service.type.TypeService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.FormatterRegistry;
@@ -17,6 +21,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -28,6 +33,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.Properties;
 
 @Configuration
@@ -36,7 +42,10 @@ import java.util.Properties;
 @EnableJpaRepositories("com.shopbike.repository")
 @ComponentScan("com.shopbike")
 @EnableSpringDataWebSupport
+@PropertySource("classpath:upload_file.properties")
 public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
+    @Value("${file-upload}")
+    private String fileUpload;
 
     private ApplicationContext applicationContext;
 
@@ -119,10 +128,19 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
         registry.addResourceHandler("/template/**")
                 .addResourceLocations("/template/")
                 .resourceChain(false);
+        registry.addResourceHandler("/image/**")
+                .addResourceLocations("file:" + fileUpload);
     }
 
-//    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        registry.addFormatter(new TypeFormatter(applicationContext.getBean(TypeService.class)));
-//    }
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver getResolver() throws IOException {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSizePerFile(52428800);
+        return resolver;
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new TypeFormatter(applicationContext.getBean(TypeService.class)));
+    }
 }

@@ -20,10 +20,10 @@
             <div class="e-tabs mb-3 px-3">
                 <ul class="nav nav-tabs">
                     <li class="nav-item"><a class="nav-link active" href="#">Products</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/type">Types</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/size">Sizes</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/user">Users</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/cart">Carts</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/types">Types</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/sizes">Sizes</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/users">Users</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/carts">Carts</a></li>
                 </ul>
             </div>
 
@@ -36,37 +36,34 @@
                             </div>
                             <div class="e-table">
                                 <div class="table-responsive table-lg mt-3">
-                                    <table class="table table-bordered">
-                                        <thead>
+                                    <table class="table table-bordered" id="listProduct">
                                         <tr>
                                             <th>Id</th>
-                                            <th class="max-width">Name</th>
+                                            <th>Name</th>
                                             <th>Type</th>
                                             <th>Size</th>
-<!--                                            <th class="sortable">Date</th>-->
                                             <th>Price</th>
                                             <th>Photo</th>
                                             <th>Actions</th>
                                         </tr>
-                                        </thead>
-                                        <tbody>
                                         <tr th:each="p : ${products}">
                                             <td class="text-nowrap align-middle" th:text="${p.idProduct}"></td>
                                             <td class="text-nowrap align-middle" th:text="${p.nameProduct}"></td>
-                                            <td class="text-nowrap align-middle" th:text="${p.type.nameType}"></td>
-                                            <td class="text-nowrap align-middle" th:text="${p.size.nameSize}"></td>
-                                            <td class="text-center align-middle"  th:text="${p.priceProduct}"></td>
+                                            <td class="text-nowrap align-middle"></td>
+                                            <td class="text-nowrap align-middle"></td>
+                                            <td class="text-center align-middle" th:text="${p.priceProduct}"></td>
                                             <td class="align-middle text-center">
-                                                <div class="bg-light d-inline-flex justify-content-center align-items-center align-top" style="width: 35px; height: 35px; border-radius: 3px;"><i class="fa fa-fw fa-photo" style="opacity: 0.8;"></i></div>
+                                                <img th:src="@{${p.image}}" alt="photo" width="50" height="50">
                                             </td>
                                             <td class="text-center align-middle">
                                                 <div class="btn-group align-top">
-                                                    <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button>
-                                                    <button class="btn btn-sm btn-outline-secondary badge" type="button"><i class="fa fa-trash"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal" onclick="editProduct()">Edit</button>
+                                                    <a class="deleteProduct" th:href="${p.getIdProduct()}">
+                                                        <button class="btn btn-sm btn-outline-secondary badge" type="button"><i class="fa fa-trash"></i></button>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
-                                        </tbody>
                                     </table>
                                 </div>
                                 <div class="d-flex justify-content-center">
@@ -89,7 +86,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="text-center px-xl-3">
-                                <button class="btn btn-success btn-block" type="button" data-toggle="modal" data-target="#user-form-modal">New Product</button>
+                                <button class="btn btn-success btn-block" type="button" data-toggle="modal" data-target="#user-form-modal" onclick="createProduct()">New Product</button>
                             </div>
                             <hr class="my-3">
                             <div class="e-navlist e-navlist--active-bold">
@@ -122,7 +119,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Create Product</h5>
+                            <h5 class="modal-title" id="managerProduct"></h5>
                             <button type="button" class="close" data-dismiss="modal">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -136,21 +133,25 @@
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label>Name Product</label>
-                                                        <input class="form-control" type="text" name="nameProduct" placeholder="Name">
+                                                        <input class="form-control" type="text" id="nameProduct" placeholder="Name">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="form-group">
-                                                        <label>Size</label>
-                                                        <input class="form-control" type="text" name="size" placeholder="Size">
+                                                        <label>Type</label>
+                                                        <select id="type" class="form-control">
+                                                            <option th:each="t : ${types}" th:value="${t.getIdType()}" th:text="${t.getNameType()}"></option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="form-group">
-                                                        <label>Type</label>
-                                                        <input class="form-control" type="text" name="type" placeholder="Type">
+                                                        <label>Size</label>
+                                                        <select id="size" class="form-control">
+                                                            <option th:each="s : ${sizes}" th:value="${s.getIdSize()}" th:text="${s.getNameSize()}"></option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -158,7 +159,7 @@
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label>Price</label>
-                                                        <input class="form-control" type="text" name="price" placeholder="Price">
+                                                        <input class="form-control" type="text" id="priceProduct" placeholder="Price">
                                                     </div>
                                                 </div>
                                             </div>
@@ -166,7 +167,15 @@
                                                 <div class="col mb-3">
                                                     <div class="form-group">
                                                         <label>Description</label>
-                                                        <textarea class="form-control" rows="5" placeholder="Description"></textarea>
+                                                        <textarea class="form-control" rows="5" id="description" placeholder="Description"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col mb-3">
+                                                    <div class="form-group">
+                                                        <label>Image</label><br>
+                                                        <input class="btn btn-primary" id="imageProduct" type="file">
                                                     </div>
                                                 </div>
                                             </div>
@@ -174,7 +183,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col d-flex justify-content-end">
-                                            <button class="btn btn-primary" type="submit">Save Changes</button>
+                                            <input class="btn btn-primary" type="submit" onclick="addNewProduct()" value="Save Changes">
                                         </div>
                                     </div>
                                 </form>
@@ -187,5 +196,15 @@
         </div>
     </div>
 </div>
+<script>
+    function createProduct() {
+        document.getElementById("managerProduct").innerHTML = "Create Product"
+    }
+    function editProduct() {
+        document.getElementById("managerProduct").innerHTML = "Edit Product"
+    }
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/template/js/product.js}"></script>
 </body>
 </html>

@@ -20,10 +20,10 @@
             <div class="e-tabs mb-3 px-3">
                 <ul class="nav nav-tabs">
                     <li class="nav-item"><a class="nav-link active" href="/">Products</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/type">Types</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/types">Types</a></li>
                     <li class="nav-item"><a class="nav-link active" href="#">Sizes</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/user">Users</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/cart">Carts</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/users">Users</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/carts">Carts</a></li>
                 </ul>
             </div>
 
@@ -36,11 +36,11 @@
                             </div>
                             <div class="e-table">
                                 <div class="table-responsive table-lg mt-3">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered" id="listSize">
                                         <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th class="max-width">Name</th>
+                                            <th>Name</th>
                                             <th>Actions</th>
                                         </tr>
                                         </thead>
@@ -50,8 +50,10 @@
                                             <td class="text-nowrap align-middle" th:text="${s.nameSize}"></td>
                                             <td class="text-center align-middle">
                                                 <div class="btn-group align-top">
-                                                    <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button>
-                                                    <button class="btn btn-sm btn-outline-secondary badge" type="button"><i class="fa fa-trash"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal" onclick="editSize()">Edit</button>
+                                                    <a class="deleteSize" th:href="${s.getIdSize()}">
+                                                        <button class="btn btn-sm btn-outline-secondary badge" type="button"><i class="fa fa-trash"></i></button>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -66,7 +68,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="text-center px-xl-3">
-                                <button class="btn btn-success btn-block" type="button" data-toggle="modal" data-target="#user-form-modal">New Size</button>
+                                <button class="btn btn-success btn-block" type="button" data-toggle="modal" data-target="#user-form-modal" onclick="createSize()">New Size</button>
                             </div>
                             <hr class="my-3">
                             <div class="e-navlist e-navlist--active-bold">
@@ -81,12 +83,12 @@
                 </div>
             </div>
 
-            <!-- User Form Modal -->
+            <!-- Size Form Modal -->
             <div class="modal fade" role="dialog" tabindex="-1" id="user-form-modal">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Create Size</h5>
+                            <h5 class="modal-title" id="managerSize"></h5>
                             <button type="button" class="close" data-dismiss="modal">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -100,7 +102,7 @@
                                                 <div class="col">
                                                     <div class="form-group">
                                                         <label>Name</label>
-                                                        <input class="form-control" type="text" name="name" placeholder="John Smith" value="John Smith">
+                                                        <input class="form-control" type="text" id="nameSize" placeholder="Size">
                                                     </div>
                                                 </div>
                                             </div>
@@ -108,7 +110,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col d-flex justify-content-end">
-                                            <button class="btn btn-primary" type="submit">Save Changes</button>
+                                            <button class="btn btn-primary" type="submit" onclick="addNewSize()">Save Changes</button>
                                         </div>
                                     </div>
                                 </form>
@@ -121,5 +123,15 @@
         </div>
     </div>
 </div>
+<script>
+    function createSize() {
+        document.getElementById("managerSize").innerHTML = "Create Size"
+    }
+    function editSize() {
+        document.getElementById("managerSize").innerHTML = "Edit Size"
+    }
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/template/js/size.js}"></script>
 </body>
 </html>
